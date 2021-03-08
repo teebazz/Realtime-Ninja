@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/styles.css" type="text/css">
+    <title>Document</title>
+</head>
+<body>
+    <h1 class="title"> A rest api</h1>
+    <div id="homepage">
+        <h1>Hire A ninja in your area!</h1>
+        <div id="ninjas"></div>
+    </div>
+    
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/6.1.19/browser.min.js" integrity="sha512-07eECUdUB26kyADW81c0eolJqjI9cbC1cE0G7yL08qWPXMeyBSXZHu7a02eBKo/wMCE8F83E5Bwr8obt0XaPzQ==" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/react@16/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js" crossorigin></script>
+
+
+    <!-- create react component -->
+    <script type="text/babel">
+
+    var Ninjas = React.createClass ({
+
+        getInitialState(){
+                return({
+                    ninjas: []
+                });
+        },
+        render(){
+            var ninjas = this.state.ninjas;
+                ninjas = ninjas.map((ninja, index)=>{
+                    return(
+                        <li key={index}> 
+                            <span className={ninja.obj.available}></span>
+                            <span className="name">{ninja.obj.name}</span>
+                            <span className="rank">{ninja.obj.rank}</span>
+                            <span className="dist">{Math.floor(ninja.dis/ 1000)}km</span>
+                        </li>
+                    )
+                })
+            return(
+                <div id="ninja-container">
+                    <form action="" id="search" onSubmit={this.handleSubmit}>
+                        <label> Enter Your Latitude</label>
+                        <input type="text" name="" id="" ref="lat" placeholder="latitude"/>
+
+                        <label> Enter Your Longitude</label>
+                        <input type="text" name="" id="" ref="lng" placeholder="longitude"/>
+                        <input type="submit" value="Find Ninja"/>
+                    </form>
+                    <ul>{ninjas}</ul>
+                </div>
+            )
+        },
+
+        handleSubmit(e){
+                e.preventDefault();
+                var lng = this.refs.lng.value
+                var lat = this.refs.lat.value
+                
+                fetch('/api/ninjas/?lng=' + lng + '&lat=' + lat)
+                .then((data)=>{
+                    return data.json();
+                })
+                .then( json =>{
+                    this.setState({
+                        ninjas:json
+                    });
+                });
+        }
+
+        
+    })
+
+       
+    ReactDOM.render(<Ninjas/>, document.getElementById('ninjas'))
+        
+    </script>
+</body>
+</html>
